@@ -46,10 +46,10 @@ public class DispositivoService {
     }
 
 //    metodo per modificare il dispositivo
-    public Dispositivo findDispositivoByIdAndUpdate(UUID dispositivoId, Dispositivo payload){
+    public Dispositivo findDispositivoByIdAndUpdate(UUID dispositivoId, DispositivoDTO payload){
         Dispositivo found = this.findDispositivoById(dispositivoId);
-        found.setTipoDispositivo(payload.getTipoDispositivo());
-        found.setStatoDispositivo(payload.getStatoDispositivo());
+        found.setTipoDispositivo(payload.tipoDispositivo());
+        found.setStatoDispositivo(payload.statoDispositivo());
         return dispositivoRepository.save(found);
 
     }

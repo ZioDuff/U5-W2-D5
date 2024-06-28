@@ -5,6 +5,8 @@ import JacopoDeMaio.gestioneDispositivi.exceptions.BadRequestException;
 import JacopoDeMaio.gestioneDispositivi.exceptions.NotFoundException;
 import JacopoDeMaio.gestioneDispositivi.payloads.DipendenteDTO;
 import JacopoDeMaio.gestioneDispositivi.repository.DipendenteRepository;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,7 +14,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @Service
@@ -20,6 +24,9 @@ public class DipendenteService {
 
     @Autowired
     private DipendenteRepository dipendenteRepository;
+
+    @Autowired
+    private Cloudinary cloudinaryUploader;
 
 //    metodo per salvare l'utente
     public Dipendente saveDipendente(DipendenteDTO payload){
@@ -67,5 +74,13 @@ public class DipendenteService {
     public void findDipendenteByIdAndDelete(UUID dipendenteId){
         Dipendente found = dipendenteRepository.findById(dipendenteId).orElseThrow(()-> new NotFoundException(dipendenteId));
         dipendenteRepository.delete(found);
+    }
+
+    public Dipendente  uploadImage(MultipartFile file, UUID dipendenteId) throws IOException {
+        String img = (String) cloudinaryUploader.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
+        Dipendente found = dipendenteRepository.findById(dipendenteId).orElseThrow(()->new NotFoundException(dipendenteId));
+        found.setAvatarURL(img);
+        dipendenteRepository.save(found);
+        return found;
     }
 }

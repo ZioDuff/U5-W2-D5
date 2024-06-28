@@ -10,7 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @RestController
@@ -50,6 +52,11 @@ public class DipendenteController {
     @DeleteMapping("/{dipendenteId}")
     public void findDipendenteByIdAndDelete(@PathVariable UUID dipendenteId){
         dipendenteService.findDipendenteByIdAndDelete(dipendenteId);
+    }
+
+    @PatchMapping("/{dipendenteId}/avatar")
+    public Dipendente uploadAvatar (@PathVariable UUID dipendenteId, @RequestParam("avatar") MultipartFile file ) throws IOException {
+        return dipendenteService.uploadImage(file,dipendenteId);
     }
 
 }

@@ -45,8 +45,14 @@ public class DispositivoController {
     }
 
     @PutMapping("/{dispositivoId}")
-    public Dispositivo findDispositivoByIdAndUpdate(@PathVariable UUID dispositivoId,@RequestBody  Dispositivo payload){
-        return dispositivoService.findDispositivoByIdAndUpdate(dispositivoId,payload);
+    public Dispositivo findDispositivoByIdAndUpdate(@PathVariable UUID dispositivoId,@RequestBody @Validated  DispositivoDTO payload , BindingResult validationResult){
+
+            if (validationResult.hasErrors()){
+                throw new BadRequestException(validationResult.getAllErrors());
+            }else return dispositivoService.findDispositivoByIdAndUpdate(dispositivoId,payload);
+
+
+
     }
 
     @DeleteMapping("/{dispositivoId}")
