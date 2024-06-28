@@ -33,4 +33,10 @@ public class Dispositivo {
     @ManyToOne
     @JoinColumn(name = "dipendente_id")
     private Dipendente dipendente;
+
+    public Dispositivo(TipoDispositivo tipoDispositivo, StatoDispositivo statoDispositivo, Dipendente dipendente) {
+        this.tipoDispositivo = tipoDispositivo;
+        this.statoDispositivo = statoDispositivo;
+        this.dipendente = null;
+    }
 }

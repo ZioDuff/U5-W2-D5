@@ -42,13 +42,13 @@ public class DipendenteController {
         return dipendenteService.findDipendenteById(dipendenteId);
     }
 
-    @PutMapping("{dipendenteId}")
-    public Dipendente findAutoreByIdAndUpdate(@PathVariable UUID dipendenteId,@RequestBody Dipendente payload){
+    @PutMapping("/{dipendenteId}")
+    public Dipendente findDipendenteByIdAndUpdate(@PathVariable UUID dipendenteId,@RequestBody Dipendente payload){
         return dipendenteService.findDipendenteByIdAndUpdate(dipendenteId,payload);
     }
     //
     @DeleteMapping("/{dipendenteId}")
-    public void findAutoreByIdAndDelete(@PathVariable UUID dipendenteId){
+    public void findDipendenteByIdAndDelete(@PathVariable UUID dipendenteId){
         dipendenteService.findDipendenteByIdAndDelete(dipendenteId);
     }
 
