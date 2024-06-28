@@ -3,6 +3,7 @@ package JacopoDeMaio.gestioneDispositivi.controller;
 import JacopoDeMaio.gestioneDispositivi.entities.Dipendente;
 import JacopoDeMaio.gestioneDispositivi.entities.Dispositivo;
 import JacopoDeMaio.gestioneDispositivi.exceptions.BadRequestException;
+import JacopoDeMaio.gestioneDispositivi.payloads.AssignDispositivoDipendenteDTO;
 import JacopoDeMaio.gestioneDispositivi.payloads.DispositivoDTO;
 import JacopoDeMaio.gestioneDispositivi.services.DipendenteService;
 import JacopoDeMaio.gestioneDispositivi.services.DispositivoService;
@@ -60,8 +61,8 @@ public class DispositivoController {
         dispositivoService.findDispositivoByIdAndDelete(dispositivoId);
     }
 
-    @PatchMapping("/{dispositivoId}/{dipendenteId}")
-    public Dispositivo updateDispositivo (@PathVariable UUID dispositivoId, @PathVariable UUID dipendenteId){
-        return dispositivoService.assignDispositivo(dispositivoId,dipendenteId);
+    @PatchMapping("/{dispositivoId}/dipendente")
+    public Dispositivo updateDispositivo (@PathVariable UUID dispositivoId, @RequestBody AssignDispositivoDipendenteDTO payload){
+        return dispositivoService.assignDispositivo(dispositivoId,payload);
     }
 }

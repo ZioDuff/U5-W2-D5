@@ -3,7 +3,9 @@ package JacopoDeMaio.gestioneDispositivi.services;
 import JacopoDeMaio.gestioneDispositivi.entities.Dipendente;
 import JacopoDeMaio.gestioneDispositivi.entities.Dispositivo;
 import JacopoDeMaio.gestioneDispositivi.enums.StatoDispositivo;
+import JacopoDeMaio.gestioneDispositivi.exceptions.BadRequestException;
 import JacopoDeMaio.gestioneDispositivi.exceptions.NotFoundException;
+import JacopoDeMaio.gestioneDispositivi.payloads.AssignDispositivoDipendenteDTO;
 import JacopoDeMaio.gestioneDispositivi.payloads.DispositivoDTO;
 import JacopoDeMaio.gestioneDispositivi.repository.DispositivoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,11 +63,21 @@ public class DispositivoService {
 
 
 //    assegnazione dispositivo a dipendente
-    public Dispositivo assignDispositivo(UUID dispositivoId, UUID dipendenteId){
+//    public Dispositivo assignDispositivo(UUID dispositivoId, UUID dipendenteId){
+//        Dispositivo found = this.findDispositivoById(dispositivoId);
+//        Dipendente dipendente = dipendenteService.findDipendenteById(dipendenteId);
+//        found.setDipendente(dipendente);
+//        found.setStatoDispositivo(StatoDispositivo.ASSEGNATO);
+//        return this.dispositivoRepository.save(found);
+//    }
+
+    public Dispositivo assignDispositivo(UUID dispositivoId, AssignDispositivoDipendenteDTO payload){
         Dispositivo found = this.findDispositivoById(dispositivoId);
-        Dipendente dipendente = dipendenteService.findDipendenteById(dipendenteId);
-        found.setDipendente(dipendente);
+
+        found.setDipendente(dipendenteService.findDipendenteById(payload.dipendenteId()));
         found.setStatoDispositivo(StatoDispositivo.ASSEGNATO);
         return this.dispositivoRepository.save(found);
     }
+
+
 }
