@@ -33,11 +33,11 @@ public class Dipendente {
 
     private String avatarURL;
 
-    public Dipendente(String username, String name, String surname, String email, String avatarURL) {
+    public Dipendente(String username, String name, String surname, String email) {
         this.username = username;
         this.name = name;
         this.surname = surname;
         this.email = email;
-        this.avatarURL = avatarURL;
+
     }
 }

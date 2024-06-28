@@ -1,8 +1,19 @@
 package JacopoDeMaio.gestioneDispositivi.services;
 
+import JacopoDeMaio.gestioneDispositivi.entities.Dipendente;
+import JacopoDeMaio.gestioneDispositivi.exceptions.BadRequestException;
+import JacopoDeMaio.gestioneDispositivi.exceptions.NotFoundException;
+import JacopoDeMaio.gestioneDispositivi.payloads.DipendenteDTO;
 import JacopoDeMaio.gestioneDispositivi.repository.DipendenteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import java.util.UUID;
 
 @Service
 public class DipendenteService {
@@ -11,5 +22,50 @@ public class DipendenteService {
     private DipendenteRepository dipendenteRepository;
 
 //    metodo per salvare l'utente
-    public
+    public Dipendente saveDipendente(DipendenteDTO payload){
+//        controllo per verificare se è gia esistente un email
+        dipendenteRepository.findByEmail(payload.email()).ifPresent(dipendente -> {
+            throw  new BadRequestException("Attenzione! l'email: "+ payload.email() + " è gia in uso");
+        });
+//        controllo per verificare se l'userName è gia presente
+        dipendenteRepository.findByUsername(payload.username()).ifPresent(dipendente -> {
+            throw  new BadRequestException("Attenzione! l'username: "+ payload.username() + " è gia in uso");
+        });
+
+        Dipendente dipendente = new Dipendente(payload.username(), payload.name(),payload.surname(), payload.email());
+
+        dipendente.setAvatarURL("https://ui-avatars.com/api/?name="+ payload.name()+ "+"+ payload.surname());
+
+        return dipendenteRepository.save(dipendente);
+    }
+
+//    metodo per tornare una tutti i dipendenti, uso page per gestire e limitare la visualizzazione dei dipendenti
+    public Page<Dipendente> getDipendenteList(int page, int size, String sortedBy){
+        if (size > 20) size= 20;
+        Pageable pageable = PageRequest.of(page,size, Sort.by(sortedBy));
+        return dipendenteRepository.findAll(pageable);
+    }
+
+//    metodo per tornare un singolo dipendente
+    public Dipendente findDipendenteById(UUID dipendenteId){
+        Dipendente found = dipendenteRepository.findById(dipendenteId).orElseThrow(()-> new NotFoundException(dipendenteId));
+        return found;
+    }
+
+//    metodo per la modifica del dipendente
+    public Dipendente findDipendenteByIdAndUpdate(UUID dipendenteId,Dipendente payload){
+        Dipendente found = dipendenteRepository.findById(dipendenteId).orElseThrow(()-> new NotFoundException(dipendenteId));
+        found.setUsername(payload.getUsername());
+        found.setName(payload.getName());
+        found.setSurname(payload.getSurname());
+        found.setEmail(payload.getEmail());
+        found.setAvatarURL("https://ui-avatars.com/api/?name="+ payload.getName()+ "+"+ payload.getSurname());
+        return dipendenteRepository.save(found);
+    }
+
+//    metodo per eliminare un dipendente dal db
+    public void findDipendenteByIdAndDelete(UUID dipendenteId){
+        Dipendente found = dipendenteRepository.findById(dipendenteId).orElseThrow(()-> new NotFoundException(dipendenteId));
+        dipendenteRepository.delete(found);
+    }
 }
